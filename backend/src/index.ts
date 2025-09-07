@@ -55,7 +55,7 @@ console.log('PORT:', config.PORT);
 console.log('NODE_ENV:', config.NODE_ENV);
 console.log('DATABASE_URL:', config.DATABASE_URL ? 'SET' : 'NOT SET');
 
-app.listen(config.PORT, async () => {
+app.listen(config.PORT, '0.0.0.0', async () => {
   console.log('📡 Server started, initializing database...');
   try {
     await initializeDatabase();

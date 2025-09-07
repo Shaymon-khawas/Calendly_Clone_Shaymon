@@ -1,7 +1,7 @@
 import { getEnv } from "../utils/get-env";
 
 const appConfig = () => ({
-  PORT: getEnv("PORT", "8000"),
+  PORT: process.env.PORT || getEnv("PORT", "8000"),
   NODE_ENV: getEnv("NODE_ENV", "development"),
   BASE_PATH: getEnv("BASE_PATH", "/api"),
 
