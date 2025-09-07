@@ -11,15 +11,6 @@ export const initializeDatabase = async () => {
 
     await AppDataSource.initialize();
     console.log("Database connected successfully");
-
-    // Handle connection errors
-    AppDataSource.driver.connection.on("error", (error) => {
-      console.error("Database connection error:", error);
-    });
-
-    AppDataSource.driver.connection.on("disconnect", () => {
-      console.warn("Database disconnected, attempting to reconnect...");
-    });
   } catch (error) {
     console.error("Database connection error:", error);
     // Don't exit immediately, try to reconnect
