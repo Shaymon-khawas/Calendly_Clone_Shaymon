@@ -25,6 +25,16 @@ API.interceptors.request.use((config) => {
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Handle cases where error.response is undefined (network errors, etc.)
+    if (!error.response) {
+      const customError: CustomError = {
+        ...error,
+        message: error.message || "Network error occurred",
+        errorCode: "NETWORK_ERROR",
+      };
+      return Promise.reject(customError);
+    }
+
     const { data, status } = error.response;
     if (data === "Unauthorized" && status === 401) {
       const store = useStore.getState();
@@ -51,6 +61,16 @@ export const PublicAPI = axios.create(options);
 PublicAPI.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Handle cases where error.response is undefined (network errors, etc.)
+    if (!error.response) {
+      const customError: CustomError = {
+        ...error,
+        message: error.message || "Network error occurred",
+        errorCode: "NETWORK_ERROR",
+      };
+      return Promise.reject(customError);
+    }
+
     const { data } = error.response;
     const customError: CustomError = {
       ...error,

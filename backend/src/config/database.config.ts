@@ -11,10 +11,10 @@ export const getDatabaseConfig = () => {
   // Add SSL parameters to the database URL for production
   if (isProduction && databaseUrl) {
     const url = new URL(databaseUrl);
-    url.searchParams.set('sslmode', 'require');
-    url.searchParams.set('sslcert', '');
-    url.searchParams.set('sslkey', '');
-    url.searchParams.set('sslrootcert', '');
+    url.searchParams.set("sslmode", "require");
+    url.searchParams.set("sslcert", "");
+    url.searchParams.set("sslkey", "");
+    url.searchParams.set("sslrootcert", "");
     databaseUrl = url.toString();
   }
 
@@ -38,10 +38,12 @@ export const getDatabaseConfig = () => {
       idle: 10000, // Maximum time a connection can be idle
       evict: 1000, // Time interval to check for idle connections
       handleDisconnects: true, // Automatically reconnect on connection loss
-      ssl: isProduction ? {
-        rejectUnauthorized: false,
-        require: true,
-      } : false,
+      ssl: isProduction
+        ? {
+            rejectUnauthorized: false,
+            require: true,
+          }
+        : false,
     },
     // Memory optimizations
     cache: {
