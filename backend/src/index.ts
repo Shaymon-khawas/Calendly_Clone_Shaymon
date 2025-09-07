@@ -49,7 +49,19 @@ app.use(`${BASE_PATH}/meeting`, meetingRoutes);
 
 app.use(errorHandler);
 
+console.log('🚀 Starting server...');
+console.log('Environment variables:');
+console.log('PORT:', config.PORT);
+console.log('NODE_ENV:', config.NODE_ENV);
+console.log('DATABASE_URL:', config.DATABASE_URL ? 'SET' : 'NOT SET');
+
 app.listen(config.PORT, async () => {
-  await initializeDatabase();
-  console.log(`Server listening on port ${config.PORT} in ${config.NODE_ENV}`);
+  console.log('📡 Server started, initializing database...');
+  try {
+    await initializeDatabase();
+    console.log(`✅ Server listening on port ${config.PORT} in ${config.NODE_ENV}`);
+  } catch (error) {
+    console.error('❌ Database initialization failed:', error);
+    process.exit(1);
+  }
 });
