@@ -22,6 +22,21 @@ export const getDatabaseConfig = () => {
       : {
           rejectUnauthorized: false,
         },
+    // Connection pooling and memory optimizations
+    extra: {
+      max: isProduction ? 10 : 5, // Maximum number of connections in the pool
+      min: isProduction ? 2 : 1, // Minimum number of connections in the pool
+      acquire: 30000, // Maximum time to wait for a connection
+      idle: 10000, // Maximum time a connection can be idle
+      evict: 1000, // Time interval to check for idle connections
+      handleDisconnects: true, // Automatically reconnect on connection loss
+    },
+    // Memory optimizations
+    cache: {
+      type: "database",
+      tableName: "query_result_cache",
+      duration: 30000, // 30 seconds cache
+    },
   });
 };
 

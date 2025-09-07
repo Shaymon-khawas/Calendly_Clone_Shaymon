@@ -6,6 +6,8 @@ import { UpdateAvailabilityDto } from "../database/dto/availability.dto";
 import { Availability } from "../database/entities/availability.entity";
 import { DayOfWeekEnum } from "../database/entities/day-availability";
 import { Event } from "../database/entities/event.entity";
+import { Meeting } from "../database/entities/meeting.entity";
+import { LessThan, MoreThan } from "typeorm";
 import { addDays, addMinutes, format, parseISO } from "date-fns";
 
 export const getUserAvailabilityService = async (userId: string) => {
@@ -81,17 +83,27 @@ export const getAvailabilityForPublicEventService = async (eventId: string) => {
 
   const event = await eventRepository.findOne({
     where: { id: eventId, isPrivate: false },
-    relations: [
-      "user",
-      "user.availability",
-      "user.availability.days",
-      "user.meetings",
-    ],
+    relations: ["user", "user.availability", "user.availability.days"],
   });
 
   if (!event || !event.user.availability) return [];
 
-  const { availability, meetings } = event.user;
+  const { availability } = event.user;
+
+  // Get only relevant meetings for the specific date range to avoid memory issues
+  const meetingRepository = AppDataSource.getRepository(Meeting);
+  const startDate = new Date();
+  const endDate = new Date();
+  endDate.setDate(startDate.getDate() + 30); // Only get meetings for next 30 days
+
+  const meetings = await meetingRepository.find({
+    where: {
+      user: { id: event.user.id },
+      startTime: MoreThan(startDate),
+      endTime: LessThan(endDate),
+    },
+    select: ["startTime", "endTime"],
+  });
 
   const daysOfWeek = Object.values(DayOfWeekEnum);
 
