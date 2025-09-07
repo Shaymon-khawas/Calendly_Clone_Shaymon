@@ -17,7 +17,7 @@ export const getDatabaseConfig = () => {
     logging: isProduction ? false : ["error"],
     ssl: isProduction
       ? {
-          rejectUnauthorized: true,
+          rejectUnauthorized: false,
         }
       : {
           rejectUnauthorized: false,
